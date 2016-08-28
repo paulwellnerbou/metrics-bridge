@@ -1,0 +1,19 @@
+apply plugin: 'groovy'
+apply plugin: 'application'
+
+mainClassName = 'de.wellnerbou.librato.app.CliApp'
+
+repositories {
+    mavenLocal()
+    jcenter()
+}
+
+dependencies {
+    compile 'org.codehaus.groovy:groovy-all:2.4.7'
+    compile 'com.librato.metrics:librato-java:1.0.14-SNAPSHOT'
+    compile 'commons-cli:commons-cli:1.2'
+    compile "org.codehaus.gpars:gpars:1.2.1"
+
+    testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
+    testCompile 'junit:junit:4.12'
+}

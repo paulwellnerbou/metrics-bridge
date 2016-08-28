@@ -1,0 +1,14 @@
+{
+  "sources": [
+    {
+      "name": "host-without-auth",
+      "url": "http://example.com/metrics",
+      "metrics": ["metric1", "metric2"]
+    },
+    {
+      "name": "host-with-auth",
+      "url": "http://user:password@example.com/metrics",
+      "metrics": ["metric1", "metric2"]
+    }
+  ]
+}
