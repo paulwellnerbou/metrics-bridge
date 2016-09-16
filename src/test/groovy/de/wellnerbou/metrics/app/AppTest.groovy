@@ -1,6 +1,9 @@
 package de.wellnerbou.metrics.app
 
+import com.librato.metrics.Authorization
+import de.wellnerbou.metrics.collect.MetricCollectorJson
 import de.wellnerbou.metrics.send.StdoutSender
+import de.wellnerbou.metrics.send.librato.LibratoSenderFactory
 import spock.lang.Specification
 
 /**
@@ -10,17 +13,24 @@ class AppTest extends Specification {
 
     def "test init context"() {
         when:
-        def options = [c: CliAppTest.TEST_CONFIG, u: "paul@wellnerbou.de", t: "6cbd8939edeb9d89112751bcaeda752d6e7b163dbdac82daddd93fcbb8df724d"]
+        def options = [c: CliAppTest.TEST_CONFIG]
         def app = new App(options)
 
         then:
-        app.sender != null
+        app.config.bridges[0].collector instanceof MetricCollectorJson
+        app.config.bridges[1].collector instanceof MetricCollectorJson
+        app.config.bridges[0].senderFactory.newSender() instanceof StdoutSender
+        app.config.bridges[1].senderFactory.newSender() instanceof StdoutSender
+        app.config.bridges[2].senderFactory.newSender() instanceof StdoutSender
+    }
 
+    def "test init context with librato sender"() {
         when:
-        app.sender = new StdoutSender()
-        app.start()
+        def options = [c: "src/test/resources/config-librato.json"]
+        def app = new App(options)
 
         then:
-        app != null
+        app.config.bridges[0].collector instanceof MetricCollectorJson
+        app.config.bridges[0].senderFactory instanceof LibratoSenderFactory
     }
 }

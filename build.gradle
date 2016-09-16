@@ -1,7 +1,21 @@
 apply plugin: 'groovy'
 apply plugin: 'application'
 
-mainClassName = 'de.wellnerbou.librato.app.CliApp'
+mainClassName = 'de.wellnerbou.metrics.app.CliApp'
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+group = 'de.wellnerbou'
+version = '0.1-SNAPSHOT'
+description = """metrics-bridge"""
+
+run {
+    maxHeapSize = "50m"
+    if ( project.hasProperty('args') ) {
+        args project.args.split('\\s+')
+    }
+}
 
 repositories {
     mavenLocal()
@@ -10,9 +24,14 @@ repositories {
 
 dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.4.7'
-    compile 'com.librato.metrics:librato-java:1.0.14-SNAPSHOT'
+    compile 'com.librato.metrics:librato-java:1.0.13'
     compile 'commons-cli:commons-cli:1.2'
     compile "org.codehaus.gpars:gpars:1.2.1"
+
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.21'
+    def logbackVersion = '1.1.7'
+    compile group: 'ch.qos.logback', name:'logback-classic', version: logbackVersion
+    testRuntime group: 'ch.qos.logback', name:'logback-core', version: logbackVersion
 
     testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
     testCompile 'junit:junit:4.12'

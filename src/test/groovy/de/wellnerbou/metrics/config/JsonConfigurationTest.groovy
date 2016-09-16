@@ -1,5 +1,6 @@
 package de.wellnerbou.metrics.config
 
+import de.wellnerbou.metrics.send.StdoutSender
 import spock.lang.Specification
 
 /**
@@ -8,13 +9,15 @@ import spock.lang.Specification
 class JsonConfigurationTest extends Specification {
     def "test load"() {
         when:
-        JsonConfiguration jsonConfiguration = new JsonConfiguration()
-        def configuration = jsonConfiguration.load()
+        def configuration = new JsonConfiguration().load('/config.json')
 
         then:
         configuration != null
-        configuration.sources[0].name == "name"
-        configuration.sources[0].url == "url"
-        configuration.sources[0].metrics == ["mem", "mem.free"]
+        configuration.bridges[0].source.name == "host-without-auth"
+        configuration.bridges[0].source.url == "http://example.com/metrics"
+        configuration.bridges[0].source.metrics == ["metric1", "metric2"]
+        configuration.bridges[0].target."class" == StdoutSender.class.name
+        configuration.bridges[1]."target-ref" == "stdout"
+        configuration.targets."test-stdout"."class" == StdoutSender.class.name
     }
 }

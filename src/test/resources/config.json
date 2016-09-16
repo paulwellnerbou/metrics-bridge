@@ -1,14 +1,44 @@
 {
-  "sources": [
+  "targets": {
+    "test-stdout": {
+      "class": "de.wellnerbou.metrics.send.StdoutSender"
+    }
+  },
+  "bridges": [
     {
-      "name": "host-without-auth",
-      "url": "http://example.com/metrics",
-      "metrics": ["metric1", "metric2"]
+      "source": {
+        "name": "host-without-auth",
+        "url": "http://example.com/metrics",
+        "metrics": [
+          "metric1",
+          "metric2"
+        ]
+      },
+      "target": {
+        "class": "de.wellnerbou.metrics.send.StdoutSender"
+      }
     },
     {
-      "name": "host-with-auth",
-      "url": "http://user:password@example.com/metrics",
-      "metrics": ["metric1", "metric2"]
+      "source": {
+        "name": "host-with-auth",
+        "url": "http://user:password@example.com/metrics",
+        "metrics": [
+          "metric3",
+          "metric4"
+        ]
+      },
+      "target-ref": "stdout"
+    },
+    {
+      "source": {
+        "name": "file",
+        "url": "/config.json",
+        "metrics": [
+          "mem",
+          "mem.free"
+        ]
+      },
+      "target-ref": "test-stdout"
     }
   ]
 }

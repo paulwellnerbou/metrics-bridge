@@ -1,0 +1,21 @@
+{
+  "bridges": [
+    {
+      "source": {
+        "name": "host-without-auth",
+        "url": "http://example.com/metrics",
+        "metrics": [
+          "metric1",
+          "metric2"
+        ]
+      },
+      "target": {
+        "class": "de.wellnerbou.metrics.send.librato.LibratoSenderFactory",
+        "params": {
+          "email": "my@email",
+          "key": "my-key"
+        }
+      }
+    }
+  ]
+}

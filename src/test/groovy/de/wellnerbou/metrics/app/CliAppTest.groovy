@@ -18,21 +18,19 @@ class CliAppTest extends Specification {
 
     def "create with params"() {
         when:
-        def app = CliApp.createApp("-c", TEST_CONFIG, "-t", "token", "-u", "user")
+        def app = CliApp.createApp("-c", TEST_CONFIG)
 
         then:
-        app.options.c == TEST_CONFIG
-        app.options.t == "token"
-        app.options.u == "user"
+        app != null
+        app.config != null
     }
 
     def "create with longOpt params"() {
         when:
-        def app = CliApp.createApp("--config=src/test/resources/config.json", "--token=token", "--user=user")
+        def app = CliApp.createApp("--config=src/test/resources/config.json")
 
         then:
-        app.options.c == TEST_CONFIG
-        app.options.t == "token"
-        app.options.u == "user"
+        app != null
+        app.config != null
     }
 }
