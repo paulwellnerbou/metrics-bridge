@@ -1,7 +1,9 @@
 package de.wellnerbou.metrics.collect
 
 import groovy.json.JsonSlurper
+import groovy.util.logging.Slf4j
 
+@Slf4j
 class MetricCollectorJson {
 
     String addr
@@ -20,10 +22,17 @@ class MetricCollectorJson {
     }
 
     Map<String, Number> collectMetrics(String[] jsonFields) {
-        def json = jsonSlurper.parseText(fetch())
-        return jsonFields.collectEntries {
+        def before = System.currentTimeMillis()
+        def fetched = fetch()
+        def elapsedTime = System.currentTimeMillis() - before
+        log.info("Fetching metrics from {} took {} seconds", addr, elapsedTime/1000.0)
+        def json = jsonSlurper.parseText(fetched)
+        def entries = jsonFields.collectEntries {
             [(it): json."$it"]
         }
+        entries["response.time"] = elapsedTime
+        entries["request.starttime"] = before
+        return entries
     }
 
     protected String fetch() {

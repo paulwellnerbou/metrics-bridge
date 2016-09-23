@@ -1,6 +1,5 @@
 package de.wellnerbou.metrics.app
 
-import com.librato.metrics.Authorization
 import de.wellnerbou.metrics.collect.MetricCollectorJson
 import de.wellnerbou.metrics.send.StdoutSender
 import de.wellnerbou.metrics.send.librato.LibratoSenderFactory

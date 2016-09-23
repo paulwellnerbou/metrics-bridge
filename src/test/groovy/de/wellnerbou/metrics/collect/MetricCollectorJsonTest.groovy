@@ -32,6 +32,7 @@ class MetricCollectorJsonTest extends Specification {
         then:
         result.mem == 1600360
         result."mem.free" == 1600350
+        result."response.time" != null
     }
 
     def "test creation with addr and auth separately"() {
