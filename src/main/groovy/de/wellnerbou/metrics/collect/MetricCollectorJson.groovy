@@ -6,6 +6,7 @@ import groovy.util.logging.Slf4j
 @Slf4j
 class MetricCollectorJson {
 
+    public static final String METRICS_BRIDGE_NAMESPACE_PREFIX = "-metrics-"
     String addr
     String auth
     def JsonSlurper jsonSlurper = new JsonSlurper();
@@ -30,8 +31,8 @@ class MetricCollectorJson {
         def entries = jsonFields.collectEntries {
             [(it): json."$it"]
         }
-        entries["response.time"] = elapsedTime
-        entries["request.starttime"] = before
+        entries[METRICS_BRIDGE_NAMESPACE_PREFIX + ".response.time"] = elapsedTime
+        entries[METRICS_BRIDGE_NAMESPACE_PREFIX + ".collect.timestamp"] = before
         return entries
     }
 
