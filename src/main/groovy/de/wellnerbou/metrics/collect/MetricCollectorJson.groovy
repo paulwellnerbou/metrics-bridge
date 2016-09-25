@@ -31,6 +31,7 @@ class MetricCollectorJson {
         def entries = jsonFields.collectEntries {
             [(it): json."$it"]
         }
+        entries["response.time"] = elapsedTime
         entries[METRICS_BRIDGE_NAMESPACE_PREFIX + ".response.time"] = elapsedTime
         entries[METRICS_BRIDGE_NAMESPACE_PREFIX + ".collect.timestamp"] = before
         return entries

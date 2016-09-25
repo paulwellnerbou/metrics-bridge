@@ -87,7 +87,8 @@ class App {
                 config.bridges.eachParallel { bridge ->
                     try {
                         Map metrics = (bridge.collector as MetricCollectorJson).collectMetrics(bridge.source.metrics as String[])
-                        (bridge.senderFactory as SenderFactory).newSender().send(bridge.source.name as String, metrics)
+                        long epoch = System.currentTimeMillis() / 1000
+                        (bridge.senderFactory as SenderFactory).newSender().send(epoch, bridge.source.name as String, metrics)
                     } catch (Exception e) {
                         e.printStackTrace()
                     }

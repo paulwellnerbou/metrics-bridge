@@ -1,12 +1,27 @@
 <configuration>
 
+    <property name="LOG_PATH" value="${LOG_PATH:-./logs}"/>
+    <property name="LOG_FILE" value="${LOG_FILE:-${LOG_PATH}/metrics-bridge.log}"/>
+
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <pattern>[%d{ISO8601}][%-5p][%t][%logger:%L] %m%n</pattern>
         </encoder>
+    </appender>
+
+    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <encoder>
+            <pattern>[%d{ISO8601}][%-5p][%t][%logger:%L] %m%n</pattern>
+        </encoder>
+        <file>${LOG_FILE}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_FILE}.%d{yyyy-MM-dd}.zip</fileNamePattern>
+            <maxHistory>100</maxHistory>
+        </rollingPolicy>
     </appender>
 
     <root level="debug">
         <appender-ref ref="STDOUT" />
+        <appender-ref ref="FILE" />
     </root>
 </configuration>

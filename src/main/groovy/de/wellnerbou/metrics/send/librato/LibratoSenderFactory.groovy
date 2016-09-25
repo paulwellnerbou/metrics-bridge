@@ -7,7 +7,7 @@ import com.librato.metrics.PostResult
 import de.wellnerbou.librato.metrics.LibratoBatchBuilder
 import de.wellnerbou.metrics.send.Sender
 import de.wellnerbou.metrics.send.SenderFactory
-import de.wellnerbou.metrics.send.StdoutSender
+import de.wellnerbou.metrics.send.LogSender
 import groovy.util.logging.Slf4j
 
 @Slf4j
@@ -29,17 +29,15 @@ class LibratoSenderFactory implements SenderFactory {
     }
 
     class LibratoSender implements Sender {
-        private StdoutSender stdoutSender = new StdoutSender()
+        private LogSender logSender = new LogSender()
 
-        void send(String source, Map<String, Number> metrics) {
+        void send(long epoch, String source, Map<String, Number> metrics) {
             LibratoBatch libratoBatch = libratoBatchBuilder.build()
-            stdoutSender.send(source, metrics)
+            logSender.send(epoch, source, metrics)
 
             metrics.each { entry ->
                 libratoBatch.addGaugeMeasurement(entry.key, entry.value)
             }
-
-            long epoch = System.currentTimeMillis() / 1000
             BatchResult result = libratoBatch.post(source, epoch)
 
             if (!result.success()) {

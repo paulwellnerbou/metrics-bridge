@@ -1,10 +1,13 @@
 package de.wellnerbou.metrics.send
 
-class StdoutSender implements Sender {
+import groovy.util.logging.Slf4j
+
+@Slf4j
+class LogSender implements Sender {
 
     void send(long epoch, String source, Map<String, Number> metrics) {
         metrics.each { entry ->
-            println source + ": time:" + epoch + ", " + entry
+            log.info(source + ": time:" + epoch + ", " + entry)
         }
     }
 }
