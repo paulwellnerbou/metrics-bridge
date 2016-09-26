@@ -79,11 +79,10 @@ class App {
     }
 
     def start() {
-        ForkJoinPool pool = new ForkJoinPool()
+        assert config.bridges != null
         new Timer().schedule({
-            assert config.bridges != null
             log.trace "Collecting metrics from ${config.bridges}..."
-            GParsPool.withExistingPool (pool) {
+            GParsPool.withPool (config.bridges.size) {
                 config.bridges.eachParallel { bridge ->
                     try {
                         Map metrics = (bridge.collector as MetricCollectorJson).collectMetrics(bridge.source.metrics as String[])
