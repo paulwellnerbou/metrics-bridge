@@ -80,7 +80,7 @@ class App {
 
     def start() {
         assert config.bridges != null
-        new Timer().schedule({
+        new Timer().scheduleAtFixedRate({
             log.trace "Collecting metrics from ${config.bridges}..."
             GParsPool.withPool (config.bridges.size) {
                 config.bridges.eachParallel { bridge ->
