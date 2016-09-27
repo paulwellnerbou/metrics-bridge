@@ -7,6 +7,9 @@ import groovy.util.logging.Slf4j
 class MetricCollectorJson {
 
     public static final String METRICS_BRIDGE_NAMESPACE_PREFIX = "-metrics-"
+    public static final String COLLECT_TIMESTAMP = METRICS_BRIDGE_NAMESPACE_PREFIX + ".collect.timestamp"
+    public static final String RESPONSE_TIME = METRICS_BRIDGE_NAMESPACE_PREFIX + ".response.time"
+    public static final int DEFAULT_TIMEOUT = 5000
     String addr
     String auth
     def JsonSlurper jsonSlurper = new JsonSlurper();
@@ -24,16 +27,22 @@ class MetricCollectorJson {
 
     Map<String, Number> collectMetrics(String[] jsonFields) {
         def before = System.currentTimeMillis()
-        def fetched = fetch()
+        def entries = [:]
+        try {
+            def fetched = fetch()
+            def json = jsonSlurper.parseText(fetched)
+            entries = jsonFields.collectEntries {
+                [(it): json."$it"]
+            }
+        } catch (Exception e) {
+            log.warn("Exception fetching metrics: {}", e.getMessage(), e)
+        }
         def elapsedTime = System.currentTimeMillis() - before
         log.info("Fetching metrics from {} took {} seconds", addr, elapsedTime/1000.0)
-        def json = jsonSlurper.parseText(fetched)
-        def entries = jsonFields.collectEntries {
-            [(it): json."$it"]
-        }
+
         entries["response.time"] = elapsedTime
-        entries[METRICS_BRIDGE_NAMESPACE_PREFIX + ".response.time"] = elapsedTime
-        entries[METRICS_BRIDGE_NAMESPACE_PREFIX + ".collect.timestamp"] = before
+        entries[RESPONSE_TIME] = elapsedTime
+        entries[COLLECT_TIMESTAMP] = before
         return entries
     }
 
@@ -49,6 +58,7 @@ class MetricCollectorJson {
         def conn = addr.toURL().openConnection()
         if (auth?.length() > 0) {
             conn.setRequestProperty("Authorization", "Basic " + auth.getBytes().encodeBase64().toString())
+            conn.setConnectTimeout(DEFAULT_TIMEOUT)
         }
         return conn.content.text
     }

@@ -30,13 +30,13 @@ class App {
         log.info "Loading config file: ${options.c}"
         println "Loading config file: ${options.c}"
         config = new JsonConfiguration().load(options.c)
-        if(!config.targets) {
+        if (!config.targets) {
             config.targets = [:]
         }
         config.targets += PREDEFINED_TARGETS
         this.config.bridges.each { bridge ->
             bridge.collector = new MetricCollectorJson(addr: bridge.source.url)
-            if(bridge."target-ref") {
+            if (bridge."target-ref") {
                 bridge.senderFactory = resolveSender(config, bridge."target-ref")
             } else {
                 bridge.senderFactory = createSenderFactory(bridge.target."class" as String, bridge.target.params)
@@ -55,12 +55,12 @@ class App {
             log.debug("No class found for $className: " + e.getMessage())
             throw e
         }
-        assert clazz != null : "No class found for name " + className
-        if(Sender.isAssignableFrom(clazz)) {
+        assert clazz != null: "No class found for name " + className
+        if (Sender.isAssignableFrom(clazz)) {
             senderFactory = new SingleInstanceSenderFactory(sender: clazz.newInstance() as Sender)
         } else if (SenderFactory.isAssignableFrom(clazz)) {
             senderFactory = clazz.newInstance() as SenderFactory
-            if(params) {
+            if (params) {
                 senderFactory.params = params;
             }
         } else {
@@ -81,12 +81,18 @@ class App {
         assert config.bridges != null
         new Timer().scheduleAtFixedRate({
             log.trace "Collecting metrics from ${config.bridges}..."
-            GParsPool.withPool (config.bridges.size) {
+            GParsPool.withPool(config.bridges.size) {
                 config.bridges.eachParallel { bridge ->
                     try {
-                        Map metrics = (bridge.collector as MetricCollectorJson).collectMetrics(bridge.source.metrics as String[])
-                        long epoch = System.currentTimeMillis() / 1000
-                        (bridge.senderFactory as SenderFactory).newSender().send(epoch, bridge.source.name as String, metrics)
+                        // start daemon timer immediate
+                        new Timer(true).schedule(new TimerTask() {
+                            @Override
+                            void run() {
+                                Map metrics = (bridge.collector as MetricCollectorJson).collectMetrics(bridge.source.metrics as String[])
+                                long epoch = System.currentTimeMillis() / 1000
+                                (bridge.senderFactory as SenderFactory).newSender().send(epoch, bridge.source.name as String, metrics)
+                            }
+                        }, 0)
                     } catch (Exception e) {
                         e.printStackTrace()
                     }
