@@ -8,7 +8,6 @@ import de.wellnerbou.metrics.send.SingleInstanceSenderFactory
 import de.wellnerbou.metrics.send.StdoutSender
 import groovy.util.logging.Slf4j
 import groovyx.gpars.GParsPool
-import jsr166y.ForkJoinPool
 
 /**
  * @author Paul Wellner Bou <paul@wellnerbou.de>

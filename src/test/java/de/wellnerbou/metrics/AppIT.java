@@ -1,4 +1,6 @@
-package de.wellnerbou.metrics.app;
+package de.wellnerbou.metrics;
+
+import de.wellnerbou.metrics.app.CliApp;
 
 public class AppIT {
 
@@ -6,5 +8,4 @@ public class AppIT {
 		final String config = "./private-data/config-...json";
 		CliApp.main(new String[]{"-c", config});
 	}
-
 }
