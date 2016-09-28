@@ -13,6 +13,15 @@ targetCompatibility = 1.7
 group = 'de.wellnerbou'
 description = """metrics-bridge"""
 
+release {
+    failOnPublishNeeded = false
+    failOnSnapshotDependencies = false
+    tagTemplate = 'v${version}'
+    versionPropertyFile = 'gradle.properties'
+    versionProperties = []
+    buildTasks = ['build', 'distZip']
+}
+
 run {
     maxHeapSize = "50m"
     if ( project.hasProperty('args') ) {
