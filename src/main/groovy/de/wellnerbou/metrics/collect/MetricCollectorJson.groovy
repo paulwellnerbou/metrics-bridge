@@ -59,6 +59,7 @@ class MetricCollectorJson {
         if (auth?.length() > 0) {
             conn.setRequestProperty("Authorization", "Basic " + auth.getBytes().encodeBase64().toString())
             conn.setConnectTimeout(DEFAULT_TIMEOUT)
+            conn.setReadTimeout(DEFAULT_TIMEOUT)
         }
         return conn.content.text
     }
