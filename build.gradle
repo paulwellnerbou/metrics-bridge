@@ -11,7 +11,6 @@ sourceCompatibility = 1.7
 targetCompatibility = 1.7
 
 group = 'de.wellnerbou'
-version = '0.2-SNAPSHOT'
 description = """metrics-bridge"""
 
 run {
