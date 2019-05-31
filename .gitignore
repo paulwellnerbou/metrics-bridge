@@ -5,12 +5,6 @@ build/
 # Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
 !gradle-wrapper.jar
 
-# Cache of project
-.gradletasknamecache
-
-# # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
-# gradle/wrapper/gradle-wrapper.properties
-
 ### IDEs
 .idea
 *.iml
@@ -19,3 +13,4 @@ build/
 .classpath
 
 logs/*
+config.json
