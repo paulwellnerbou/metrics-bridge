@@ -6,10 +6,4 @@ services:
       - ./:/usr/src/myapp
     working_dir: /usr/src/myapp
     command: /bin/sh -c "./gradlew clean shadowJar && java -jar ./build/libs/metrics-bridge-*-all.jar -c config.json"
-    networks:
-      - nginx_default
-      - default
     restart: unless-stopped
-networks:
-  nginx_default:
-    external: true
