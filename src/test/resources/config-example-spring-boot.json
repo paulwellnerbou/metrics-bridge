@@ -1,0 +1,25 @@
+{
+  "bridges": [
+    {
+      "source": {
+        "name": "app",
+        "url": "http://app:8080/path/metrics/",
+        "metrics": [
+          "mem.free",
+          "heap.used",
+          "heap",
+          "threads",
+          "httpsessions.active",
+          "systemload.average"
+        ]
+      },
+      "target": {
+        "class": "de.wellnerbou.metrics.send.librato.LibratoSenderFactory",
+        "params": {
+          "email": "mail@example.com",
+          "key": "key"
+        }
+      }
+    }
+  ]
+}
